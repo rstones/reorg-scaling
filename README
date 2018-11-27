@@ -1,0 +1,5 @@
+Set up the python dependencies and virtual environment by running the script setup.sh. You can pass the absolute path to your python 3.6 installation as an argument to the script otherwise it will try to use /usr/bin/python3.6 by default.
+
+After setup, enter the virtualenv using source venv/bin/activate (on linux, this might be different depending on your OS).
+
+The python scripts can then be run, passing command line arguments for various parameters...
