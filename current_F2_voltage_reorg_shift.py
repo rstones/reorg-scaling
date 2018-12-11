@@ -64,7 +64,7 @@ def calculate_current(Gamma_R, i, delta_E, J, c, no_mode):
     mode_reorg_energy = mode_freq * mode_S
     total_reorg_energy = drude_reorg_energy + mode_reorg_energy
     T = 300.
-    num_tiers = 4
+    num_tiers = 5
 
     logging.info(f'{p_name}: Constructing model at {datetime.datetime.now().time()}')
     model = PhotocellModel(
