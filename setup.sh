@@ -31,4 +31,4 @@ pip install git+https://github.com/rstones/counting_statistics.git
 pip install git+https://github.com/rstones/quant_mech.git
 
 # make data directory
-mkdir data
+mkdir data && mkdir log
