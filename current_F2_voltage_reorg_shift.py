@@ -8,6 +8,7 @@ from scipy.sparse.linalg.eigen.arpack.arpack import ArpackNoConvergence
 import logging
 import datetime
 import multiprocessing as mp
+import sys
 
 start_time = datetime.datetime.now()
 timestamp = int(start_time.timestamp())
@@ -17,6 +18,22 @@ logging.basicConfig(
             level=logging.DEBUG
         )
 logging.info(f'Executing script {__file__} at {start_time}')
+
+# get the max num of processes to use from command line arg 
+try:
+    num_processes = int(sys.argv[1])
+except:
+    num_processes = 0
+cpu_count = mp.cpu_count()
+logging.info(f'CPU count: {cpu_count}')
+
+if not num_processes:
+    num_processes = cpu_count - 1
+elif num_processes > (cpu_count - 1):
+    logging.warn('Max number of processes defined on command line greater than number of cpus available')
+    num_processes = cpu_count - 1
+logging.info(f'Number of processes to use: {num_processes}')
+
 
 Gamma_R_range = np.logspace(
                         -20.,
@@ -109,15 +126,15 @@ def calculate_current(Gamma_R, i, delta_E, J, c, no_mode):
     return current, voltage
 
 if __name__ == '__main__':
-    num_cpus = mp.cpu_count()
-    logging.info(f'Number of CPUs: {num_cpus}')
+    #num_cpus = mp.cpu_count()
+    #logging.info(f'Number of CPUs: {num_cpus}')
     
     for param_set in params:
         logging.info('#################################################')
         logging.info(f'Starting process pool with parameter set {param_set}')
         logging.info(f'Time is {datetime.datetime.now()}')
         logging.info('#################################################')
-        with mp.Pool(num_cpus-1) as pool:
+        with mp.Pool(num_processes) as pool:
             delta_E, J, c, no_mode = param_set
             args = [[Gamma_R, i, delta_E, J, c, no_mode] for i,Gamma_R in enumerate(Gamma_R_range)]
             result = pool.starmap(calculate_current, args)
